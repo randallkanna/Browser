@@ -61,6 +61,10 @@
     self.view = mainView;
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
+}
+
 - (void) viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
@@ -70,8 +74,6 @@
     
     self.textField.frame = CGRectMake(0, 0, width, itemHeight);
     self.webView.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
-    
-    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
 }
 
 #pragma mark - UITextFieldDelegate
@@ -161,7 +163,7 @@
     }
 }
 
--(void) floatingToolbar:(AwesomeFloatingToolbar *)toolbar didTryToPanWithOffset:(CGPoint)offset {
+- (void) floatingToolbar:(AwesomeFloatingToolbar *)toolbar didTryToPanWithOffset:(CGPoint)offset {
     CGPoint startingPoint = toolbar.frame.origin;
     CGPoint newPoint = CGPointMake(startingPoint.x + offset.x, startingPoint.y + offset.y);
     
@@ -171,6 +173,18 @@
         toolbar.frame = potentialNewFrame;
     }
 }
+
+-(void) floatingToolbar:(AwesomeFloatingToolbar *)toolbar didTryToPinchWithOffset:(CGFloat)scale {
+    CGSize startingSize = toolbar.frame.size;
+    CGSize newSize = CGSizeMake(startingSize.width * scale, startingSize.height * scale);
+    
+    CGRect potentialNewFrame = CGRectMake(toolbar.frame.origin.x, toolbar.frame.origin.y, newSize.width, newSize.height);
+    
+    if (CGRectContainsRect(self.view.bounds, potentialNewFrame)) {
+        toolbar.frame = potentialNewFrame;
+    }
+}
+
 
 
 @end
